@@ -1,20 +1,20 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 
-/**
- *
- * @author Acer
- */
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import javax.swing.table.DefaultTableModel;
+
+
 public class JFBiblioteca extends javax.swing.JFrame {
-
-    /**
-     * Creates new form JFBiblioteca
-     */
+    Mysql banco = new Mysql();
+    DefaultTableModel model;
+    
     public JFBiblioteca() {
         initComponents();
+        int valida =  banco.conectar("localhost","3306","bancobiblioteca","root","101311");
+        if(valida == 1){
+            System.out.println("Conectado!");
+        }
+        model = (DefaultTableModel)jTableBiblioteca.getModel(); 
     }
 
     /**
@@ -28,15 +28,15 @@ public class JFBiblioteca extends javax.swing.JFrame {
 
         jLabel1 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
-        jButton1 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
-        jTextField1 = new javax.swing.JTextField();
-        jTextField2 = new javax.swing.JTextField();
+        jTableBiblioteca = new javax.swing.JTable();
+        jBAdicionar = new javax.swing.JButton();
+        jBConsultaTudo = new javax.swing.JButton();
+        jBConsulta = new javax.swing.JButton();
+        jTFNomeLivro = new javax.swing.JTextField();
+        jTFAutor = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        jTextField3 = new javax.swing.JTextField();
+        jTFNomeConsulta = new javax.swing.JTextField();
         jComboBox1 = new javax.swing.JComboBox<>();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
@@ -47,7 +47,7 @@ public class JFBiblioteca extends javax.swing.JFrame {
         jLabel1.setText("Biblioteca");
         jLabel1.setMaximumSize(new java.awt.Dimension(60, 20));
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        jTableBiblioteca.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -55,17 +55,22 @@ public class JFBiblioteca extends javax.swing.JFrame {
                 "ID", "Nome", "Autor", "Emprestado", "Com quem", "Data que pegou"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(jTableBiblioteca);
 
-        jButton1.setText("Adicionar");
-
-        jButton3.setText("Consultar Tudo");
-
-        jButton4.setText("Consultar");
-
-        jTextField2.addActionListener(new java.awt.event.ActionListener() {
+        jBAdicionar.setText("Adicionar");
+        jBAdicionar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jTextField2ActionPerformed(evt);
+                jBAdicionarActionPerformed(evt);
+            }
+        });
+
+        jBConsultaTudo.setText("Consultar Tudo");
+
+        jBConsulta.setText("Consultar");
+
+        jTFAutor.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTFAutorActionPerformed(evt);
             }
         });
 
@@ -98,12 +103,12 @@ public class JFBiblioteca extends javax.swing.JFrame {
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addGroup(layout.createSequentialGroup()
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                            .addComponent(jBAdicionar, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jTFNomeLivro, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE))
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                            .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                            .addComponent(jTextField2))
+                                            .addComponent(jBConsultaTudo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addComponent(jTFAutor))
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                         .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addGroup(layout.createSequentialGroup()
@@ -115,8 +120,8 @@ public class JFBiblioteca extends javax.swing.JFrame {
                                 .addGap(18, 18, 18)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(jLabel5)
-                                    .addComponent(jTextField3)
-                                    .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, 163, Short.MAX_VALUE))
+                                    .addComponent(jTFNomeConsulta)
+                                    .addComponent(jBConsulta, javax.swing.GroupLayout.DEFAULT_SIZE, 163, Short.MAX_VALUE))
                                 .addGap(12, 12, 12)))
                         .addContainerGap())))
         );
@@ -133,15 +138,15 @@ public class JFBiblioteca extends javax.swing.JFrame {
                     .addComponent(jLabel4))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTFNomeLivro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTFAutor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTFNomeConsulta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton4)
-                    .addComponent(jButton1)
-                    .addComponent(jButton3))
+                    .addComponent(jBConsulta)
+                    .addComponent(jBAdicionar)
+                    .addComponent(jBConsultaTudo))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 342, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(17, 17, 17))
@@ -150,10 +155,51 @@ public class JFBiblioteca extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jTextField2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField2ActionPerformed
+    private void jTFAutorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTFAutorActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jTextField2ActionPerformed
+    }//GEN-LAST:event_jTFAutorActionPerformed
 
+    private void jBAdicionarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBAdicionarActionPerformed
+        // TODO add your handling code here:
+        //Pegar os dados e mandar para o banco
+        String livro = jTFNomeLivro.getText();
+        String nomeAutor = jTFAutor.getText();
+        
+        int valida = banco.inserir(livro, nomeAutor);
+        if(valida == 1){
+            System.out.println("Inseriu");
+            model.setRowCount(0);
+            System.out.println("Inseriu!!");
+            ResultSet rs = banco.consultar();
+            if(rs != null){
+                try{
+                    while(rs.next()){
+                        String ID = rs.getString(1);
+                        String nome = rs.getString(2);
+                        String autor = rs.getString(3);
+                        String emprestado = rs.getString(4);
+                        String responsavel = rs.getString(5);
+                        String data = rs.getString(6);
+                        
+                    
+                        model.addRow(new String[]{ID,nome,autor,emprestado,responsavel,data});
+                    }
+                }catch(SQLException ex){               
+                }
+            }
+        }
+        limpaCampos();
+        //consultar tudo e mandar para a tabela
+        
+        
+        
+    }//GEN-LAST:event_jBAdicionarActionPerformed
+    public void limpaCampos(){
+        jTFNomeLivro.setText("");
+        jTFAutor.setText("");
+        jTFNomeConsulta.setText("");
+    }
+    
     /**
      * @param args the command line arguments
      */
@@ -190,9 +236,9 @@ public class JFBiblioteca extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton3;
-    private javax.swing.JButton jButton4;
+    private javax.swing.JButton jBAdicionar;
+    private javax.swing.JButton jBConsulta;
+    private javax.swing.JButton jBConsultaTudo;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -200,9 +246,9 @@ public class JFBiblioteca extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
+    private javax.swing.JTextField jTFAutor;
+    private javax.swing.JTextField jTFNomeConsulta;
+    private javax.swing.JTextField jTFNomeLivro;
+    private javax.swing.JTable jTableBiblioteca;
     // End of variables declaration//GEN-END:variables
 }

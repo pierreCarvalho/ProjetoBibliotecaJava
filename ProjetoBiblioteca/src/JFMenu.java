@@ -1,20 +1,16 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 
-/**
- *
- * @author Acer
- */
 public class JFMenu extends javax.swing.JFrame {
-
+    
+    Mysql banco = new Mysql();
     /**
      * Creates new form JFMenu
      */
     public JFMenu() {
         initComponents();
+        int valida = banco.conectar("localhost", "3306", "bancobiblioteca", "root", "101311");
+        if(valida == 1){
+            System.out.println("Conectado!");
+        }
     }
 
     /**
